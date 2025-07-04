@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Hopscotch App</title>
+</head>
+<body>
+  <button id="hopBtn">Hop!</button>
+  <div id="result"></div>
+
+  <script>
+document.getElementById("hopBtn").addEventListener("click", function() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(async function(position) {
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+      const apiKey = "AIzaSyBYiT-5QjC0Lq8TdxQOtYPA0xTA4Vtp6aw"; // <-- Replace this
+      const type = "cafe";
+      const radius = 1000;
+
+      const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=${radius}&type=${type}&key=${apiKey}`;
+
+      const response = await fetch(url);
+      const data = await response.json();
+      if (data.results.length > 0) {
+        const randomPlace = data.results[Math.floor(Math.random() * data.results.length)];
+        document.getElementById("result").innerText = `${randomPlace.name}\n${randomPlace.vicinity}`;
+      } else {
+        document.getElementById("result").innerText = "No results found.";
+      }
+    });
+  } else {
+    alert("Geolocation is not supported by this browser.");
+  }
+});
+  </script>
+</body>
+</html>
